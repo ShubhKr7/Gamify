@@ -1,4 +1,5 @@
 import "./App.css";
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { PointsProvider, usePoints } from "./contexts/PointsContext";
 import { SurveyProvider, useSurvey } from "./contexts/SurveyContext";
@@ -8,6 +9,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import ResponsesPage from "./pages/ResponsesPage";
 import { useNavigate } from "react-router-dom";
 import MyProgressPage from "./pages/MyProgressPage";
+import AdminTaskPage from "./pages/AdminTaskPage";
+import CreateTaskPage from "./pages/CreateTaskPage";
 
 function Dashboard() {
   const { points } = usePoints();
@@ -91,7 +94,31 @@ function Dashboard() {
       ],
     },
   };
-  
+
+  useEffect(() => {
+    const today = new Date().toDateString(); // e.g., "Tue Jul 01 2025"
+    const lastGlobalReset = localStorage.getItem("lastGlobalReset");
+
+    if (lastGlobalReset !== today) {
+      // Clean up all task-related localStorage
+      for (let i = 1; i <= 8; i++) {
+        localStorage.removeItem(`completedTasks-${i}`);
+        localStorage.removeItem(`points-${i}`);
+        localStorage.removeItem(`rewardClaimed-${i}`);
+      }
+
+      // Set reset tracker
+      localStorage.setItem("lastGlobalReset", today);
+
+      // Also store cleanup status as an object for debugging/monitoring
+      const cleanupStatus = {
+        status: "success",
+        cleanedAt: new Date().toISOString(),
+        cleanedCategories: Array.from({ length: 8 }, (_, i) => i + 1),
+      };
+      localStorage.setItem("dailyCleanupStatus", JSON.stringify(cleanupStatus));
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4 md:p-8">
@@ -245,6 +272,8 @@ function Root() {
             <Route path="/survey/:id" element={<SurveyPage />} />
             <Route path="/responses" element={<ResponsesPage />} />
             <Route path="/my-progress" element={<MyProgressPage />} />
+            <Route path="/admin/:id" element={<AdminTaskPage />} />
+            <Route path="/task/:id/create" element={<CreateTaskPage />} />
           </Routes>
         </Router>
       </SurveyProvider>

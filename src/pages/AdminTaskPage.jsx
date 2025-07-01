@@ -105,18 +105,6 @@ const tasks = {
           "Running gives you energy and makes you stronger! Count your laps and try to beat your record. Feel the wind as you move your body!",
       },
       {
-        name: "Run around the house or garden 3 times",
-        description: "Get your heart pumping with this fun exercise",
-        details:
-          "Running gives you energy and makes you stronger! Count your laps and try to beat your record. Feel the wind as you move your body!",
-      },
-      {
-        name: "Run around the house or garden 3 times",
-        description: "Get your heart pumping with this fun exercise",
-        details:
-          "Running gives you energy and makes you stronger! Count your laps and try to beat your record. Feel the wind as you move your body!",
-      },
-      {
         name: "Do 10 jumping jacks",
         description: "Great for coordination and energy",
         details:
@@ -266,63 +254,16 @@ export default function TaskPage() {
     }
   });
 
-  const [userPoints, setUserPoints] = useState(0); // or fetch from localStorage or backend
-  const [rewardClaimed, setRewardClaimed] = useState(false);
-
-  const [celebrate, setCelebrate] = useState(false);
-  const [points, setPoints] = useState(() => {
-    const saved = localStorage.getItem(`points-${id}`);
-    return saved ? JSON.parse(saved) : 0;
+  const [editableTasks, setEditableTasks] = useState(() => {
+    return category?.tasks.map((task) => task.details) || [];
   });
+
+  const [editableDifficulties, setEditableDifficulties] = useState(() =>
+    category?.tasks.map(() => "Easy")
+  );
 
   const [flippedCards, setFlippedCards] = useState([]);
-  const [stats, setStats] = useState({
-    ongoing: Math.floor(Math.random() * 100) + 20,
-    completed: Math.floor(Math.random() * 500) + 100,
-  });
 
-  const [showRewardPopup, setShowRewardPopup] = useState(false);
-  const [pointsAdded, setPointsAdded] = useState(false);
-
-  const handleClaimReward = () => {
-    // Show the reward popup first
-    setShowRewardPopup(true);
-
-    // Play celebration sound effect
-    new Audio(
-      "https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"
-    ).play();
-  };
-
-  // const handleConfirmReward = () => {
-  //   // Add points if not already added
-  //   if (!pointsAdded) {
-  //     setPoints(points + 100);
-  //     setPointsAdded(true);
-  //   }
-
-  //   // Redirect after short delay to allow animation
-  //   setTimeout(() => {
-  //     navigate("/");
-  //   }, 800);
-  // };
-
-  const handleConfirmReward = () => {
-    if (rewardClaimed) return;
-
-    const newPoints = userPoints;
-    setUserPoints(newPoints);
-    setRewardClaimed(true);
-
-    localStorage.setItem("userPoints", newPoints);
-    localStorage.setItem(`rewardClaimed-${id}`, "true");
-
-    setTimeout(() => {
-      navigate("/");
-    }, 800);
-  };
-
-  // Dark pattern: Gradually increase numbers to create social proof illusion
   useEffect(() => {
     const interval = setInterval(() => {
       setStats((prev) => ({
@@ -334,12 +275,13 @@ export default function TaskPage() {
   }, []);
 
   useEffect(() => {
-    const savedPoints = parseInt(localStorage.getItem("userPoints")) || 0;
-    const wasClaimed = localStorage.getItem(`rewardClaimed-${id}`) === "true";
-
-    setUserPoints(savedPoints);
-    setRewardClaimed(wasClaimed);
-  }, [id]);
+    const savedTask = localStorage.getItem(`newTask-${id}`);
+    if (savedTask) {
+      const parsed = JSON.parse(savedTask);
+      setTasks((prev) => [...prev, parsed]);
+      localStorage.removeItem(`newTask-${id}`);
+    }
+  }, []);
 
   const handleFlip = (index) => {
     if (!flippedCards.includes(index)) {
@@ -351,50 +293,14 @@ export default function TaskPage() {
     }
   };
 
-  const handleComplete = (index) => {
-    const category = tasks[id];
-    const task = category?.tasks?.[index];
-
-    if (!task) return;
-
-    const completedTask = {
-      taskName: task.name, // ✅ just store the name (string)
-      completedAt: new Date().toISOString(),
-    };
-
-    const previous =
-      JSON.parse(localStorage.getItem(`completedTasks-${id}`)) || [];
-
-    const alreadyCompleted = previous.some((t) => t.taskName === task.name);
-    if (alreadyCompleted) return;
-
-    const updated = [...previous, completedTask];
-    setCompletedTasks(updated);
-
-    setPoints((prev) => {
-      const newPoints = prev + 50;
-      localStorage.setItem(`points-${id}`, newPoints);
-      return newPoints;
-    });
-
-    localStorage.setItem(`completedTasks-${id}`, JSON.stringify(updated));
-
-    setCelebrate(true);
-    setTimeout(() => setCelebrate(false), 2000);
-    setTimeout(() => navigate(`/survey/${id}`), 800);
+  const handleDoneEdit = (index) => {
+    category.tasks[index].details = editableTasks[index];
+    // You could optionally store editableDifficulties[index] in category.tasks[index].difficulty
+    setFlippedCards((prev) => prev.filter((i) => i !== index));
   };
 
   // Task difficulties for visual variety
   const difficulties = ["Easy", "Medium", "Hard", "Popular", "Trending"];
-
-  const resetProgress = () => {
-    localStorage.removeItem(`completedTasks-${id}`);
-    localStorage.removeItem(`points-${id}`);
-    localStorage.removeItem(`rewardClaimed-${id}`);
-    setCompletedTasks([]);
-    setPoints(0);
-    setRewardClaimed(false);
-  };
 
   if (!category) {
     return (
@@ -429,49 +335,6 @@ export default function TaskPage() {
     <div
       className={`relative min-h-screen bg-gradient-to-br ${colorScheme.bg} p-4 md:p-8`}
     >
-      {/* Celebration Confetti */}
-      <AnimatePresence>
-        {celebrate && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 pointer-events-none flex justify-center items-center z-50"
-          >
-            {[...Array(50)].map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{
-                  x: 0,
-                  y: 0,
-                  opacity: 1,
-                  scale: 1,
-                }}
-                animate={{
-                  x: Math.random() * 400 - 200,
-                  y: Math.random() * 800 - 400,
-                  opacity: 0,
-                  scale: Math.random() * 1.5 + 0.5,
-                }}
-                transition={{
-                  duration: 2,
-                  ease: "backOut",
-                }}
-                className="absolute text-3xl"
-                style={{
-                  color: ["#f59e0b", "#ef4444", "#3b82f6", "#10b981"][
-                    Math.floor(Math.random() * 4)
-                  ],
-                  rotate: Math.random() * 360,
-                }}
-              >
-                {["🎉", "✨", "🌟", "🥳", "🎊"][Math.floor(Math.random() * 5)]}
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Floating Bubbles Background */}
       <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none">
         {[...Array(20)].map((_, i) => (
@@ -503,18 +366,27 @@ export default function TaskPage() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate("/")}
-            className={`${colorScheme.accent} text-white cursor-pointer px-4 py-2 rounded-full shadow-lg flex items-center gap-2`}
+            className={`${colorScheme.accent} text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2`}
           >
             <span className="text-xl">←</span>
             <span className="font-medium">All Quests</span>
           </motion.button>
 
-          <div
-            className={`${colorScheme.accent}/10 border-2 ${colorScheme.accent}/30 text-${colorScheme.text} px-4 py-2 rounded-full font-bold shadow-md flex items-center gap-2`}
+          <button
+            className={`bg-${colorScheme.accent} hover:bg-${colorScheme.accent}/90 text-${colorScheme.text} border-2 border-${colorScheme.accent}/30 px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer group`}
+            onClick={() => {
+              // Your create task logic here
+              navigate(`/task/${id}/create`);
+            }}
           >
-            <span className="text-lg">✨</span>
-            <span>{points} XP</span>
-          </div>
+            <span className="text-xl group-hover:rotate-90 transition-transform duration-300">
+              +
+            </span>
+            <span>Create Task</span>
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ml-1">
+              🎯
+            </span>
+          </button>
         </motion.div>
 
         {/* Category Header */}
@@ -534,7 +406,7 @@ export default function TaskPage() {
         </motion.div>
 
         {/* Task List */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-0 sm:px-2 py-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 2xl:grid-cols-3 gap-6 px-0 sm:px-2 py-4">
           {category.tasks.map((task, index) => (
             <div
               key={index}
@@ -562,9 +434,10 @@ export default function TaskPage() {
                   }`}
                   whileHover={{ scale: 1.02 }}
                 >
-                  {/* Popular tag */}
+                  {/* Editable difficulty tag */}
                   <div className="absolute -top-3 -right-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10">
-                    {difficulties[index % difficulties.length]}
+                    {editableDifficulties[index] ||
+                      difficulties[index % difficulties.length]}
                   </div>
 
                   {/* Difficulty indicator */}
@@ -621,7 +494,7 @@ export default function TaskPage() {
                     >
                       {completedTasks.some((t) => t.taskName === task.name)
                         ? "Completed ✓"
-                        : "Start Task"}
+                        : "Edit Task"}
                     </motion.button>
                   </div>
                 </motion.div>
@@ -644,29 +517,39 @@ export default function TaskPage() {
                 >
                   <div className="h-full flex flex-col">
                     <h4 className="text-lg font-semibold text-gray-800 mb-2">
-                      Task Details
+                      Edit Task Details
                     </h4>
-                    <p className="text-gray-700 mb-4 flex-grow">
-                      {task.details ||
-                        "Complete this task to learn something new!"}
-                    </p>
 
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="bg-white/80 rounded-lg p-2 text-center shadow-inner">
-                        <div className="text-xs text-gray-500">
-                          Currently Doing
-                        </div>
-                        <div className="font-bold text-blue-600 animate-countup">
-                          {stats.ongoing + index * 3}
-                        </div>
-                      </div>
-                      <div className="bg-white/80 rounded-lg p-2 text-center shadow-inner">
-                        <div className="text-xs text-gray-500">Completed</div>
-                        <div className="font-bold text-green-600 animate-countup">
-                          {stats.completed + index * 15}
-                        </div>
-                      </div>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Select Difficulty
+                      </label>
+                      <select
+                        value={editableDifficulties[index]}
+                        onChange={(e) => {
+                          const updated = [...editableDifficulties];
+                          updated[index] = e.target.value;
+                          setEditableDifficulties(updated);
+                        }}
+                        className="w-full rounded-lg border border-gray-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      >
+                        <option>Easy</option>
+                        <option>Medium</option>
+                        <option>Hard</option>
+                        <option>Popular</option>
+                        <option>Trending</option>
+                      </select>
                     </div>
+
+                    <textarea
+                      className="w-full flex-grow rounded-lg p-3 text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none mb-4"
+                      value={editableTasks[index]}
+                      onChange={(e) => {
+                        const updated = [...editableTasks];
+                        updated[index] = e.target.value;
+                        setEditableTasks(updated);
+                      }}
+                    />
 
                     <div className="flex gap-3">
                       <motion.button
@@ -679,12 +562,12 @@ export default function TaskPage() {
                         }
                         className="flex-1 bg-white text-gray-800 py-2 rounded-lg font-medium shadow"
                       >
-                        Back
+                        Cancel
                       </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
-                        onClick={() => handleComplete(index)}
+                        onClick={() => handleDoneEdit(index)}
                         className={`flex-1 py-2 rounded-lg font-bold shadow-md ${
                           ["bg-blue-500", "bg-purple-500", "bg-amber-500"][
                             index % 3
@@ -711,134 +594,6 @@ export default function TaskPage() {
             </div>
           ))}
         </div>
-
-        {/* Existing progress component */}
-        {completedTasks.length > 0 && (
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className={`mt-10 p-6 rounded-xl ${colorScheme.accent}/10 border-2 ${colorScheme.accent}/20 text-center`}
-          >
-            <h3 className="text-xl font-bold mb-2 text-gray-800">
-              Quest Progress
-            </h3>
-            <div className="w-full bg-gray-200 rounded-full h-4 mb-3">
-              <div
-                className={`h-4 rounded-full ${colorScheme.accent} transition-all duration-500`}
-                style={{
-                  width: `${
-                    (completedTasks.length / category.tasks.length) * 100
-                  }%`,
-                }}
-              />
-            </div>
-            <p className="font-medium">
-              {completedTasks.length} of {category.tasks.length} tasks completed
-            </p>
-            {completedTasks.length === category.tasks.length && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="mt-4"
-              >
-                <button
-                  onClick={handleClaimReward}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition-transform"
-                >
-                  Claim Your Reward! 🎁
-                </button>
-              </motion.div>
-            )}
-          </motion.div>
-        )}
-
-        {/* Reward Confirmation Popup */}
-        <AnimatePresence>
-          {showRewardPopup && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ type: "spring", damping: 20 }}
-              className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-              onClick={() => setShowRewardPopup(false)}
-            >
-              <motion.div
-                initial={{ y: 50 }}
-                animate={{ y: 0 }}
-                className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl p-8 max-w-md w-full shadow-2xl border-2 border-white/30 relative overflow-hidden"
-              >
-                {/* Confetti effect */}
-                {[...Array(30)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute text-2xl"
-                    initial={{
-                      x: Math.random() * 400 - 200,
-                      y: -50,
-                      opacity: 1,
-                      rotate: Math.random() * 360,
-                    }}
-                    animate={{
-                      y: window.innerHeight,
-                      opacity: 0,
-                      transition: {
-                        duration: 2,
-                        delay: i * 0.05,
-                      },
-                    }}
-                    style={{
-                      left: `${Math.random() * 100}%`,
-                      color: ["#f59e0b", "#ef4444", "#3b82f6", "#10b981"][
-                        Math.floor(Math.random() * 4)
-                      ],
-                    }}
-                  >
-                    {
-                      ["🎉", "✨", "🌟", "🥳", "🎊"][
-                        Math.floor(Math.random() * 5)
-                      ]
-                    }
-                  </motion.div>
-                ))}
-
-                <div className="relative z-10 text-center">
-                  <div className="text-7xl mb-4 animate-bounce">🎁</div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                    Congratulations!
-                  </h3>
-                  <p className="text-gray-700 mb-6">
-                    You've completed all your tasks for today! Here's your
-                    reward:
-                  </p>
-
-                  <div className="bg-white/80 rounded-xl p-4 mb-6 shadow-inner">
-                    <div className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">
-                      +100 XP
-                    </div>
-                    <div className="text-sm text-gray-500 mt-1">
-                      Added to your total points
-                    </div>
-                  </div>
-
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleConfirmReward}
-                    disabled={rewardClaimed}
-                    className={`${
-                      rewardClaimed
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-gradient-to-r from-purple-500 to-pink-500"
-                    } text-white px-8 py-3 rounded-full font-bold shadow-lg w-full transition`}
-                  >
-                    {rewardClaimed ? "Already Claimed" : "Claim & Continue"}
-                  </motion.button>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </div>
   );

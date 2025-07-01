@@ -25,7 +25,7 @@ export default function SurveyPage() {
 
   const handleSubmit = () => {
     const totalScore = answers.reduce((sum, score) => sum + score, 0);
-    addPoints(totalScore * 10);
+    addPoints(50);
     addResponse(id, answers); // Save survey record
     navigate(-1);
   };
