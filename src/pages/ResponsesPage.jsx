@@ -74,7 +74,7 @@ export default function ResponsesPage() {
 
         {/* Back Button */}
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/dashboard")}
           className="absolute top-2 left-2 sm:top-4 sm:left-4 text-xs sm:text-sm bg-indigo-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg hover:bg-indigo-600 transition-all hover:scale-105 shadow-md flex items-center gap-1 sm:gap-2"
         >
           <span className="text-lg">←</span>
@@ -95,7 +95,7 @@ export default function ResponsesPage() {
               No quests completed yet!
             </p>
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/dashboard")}
               className="bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105 text-sm sm:text-base"
             >
               Start Your First Quest →

@@ -85,7 +85,7 @@ export default function MyProgressPage() {
           )}
 
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/dashboard")}
             className="absolute top-4 left-4 bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full text-sm font-medium transition-all flex items-center gap-1"
           >
             ← Dashboard

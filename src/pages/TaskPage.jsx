@@ -256,6 +256,7 @@ export default function TaskPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const category = tasks[id];
+  const [startedTasks, setStartedTasks] = useState([]);
   const [completedTasks, setCompletedTasks] = useState(() => {
     try {
       const saved = localStorage.getItem(`completedTasks-${id}`);
@@ -293,19 +294,6 @@ export default function TaskPage() {
       "https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"
     ).play();
   };
-
-  // const handleConfirmReward = () => {
-  //   // Add points if not already added
-  //   if (!pointsAdded) {
-  //     setPoints(points + 100);
-  //     setPointsAdded(true);
-  //   }
-
-  //   // Redirect after short delay to allow animation
-  //   setTimeout(() => {
-  //     navigate("/");
-  //   }, 800);
-  // };
 
   const handleConfirmReward = () => {
     if (rewardClaimed) return;
@@ -502,7 +490,7 @@ export default function TaskPage() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/dashboard")}
             className={`${colorScheme.accent} text-white cursor-pointer px-4 py-2 rounded-full shadow-lg flex items-center gap-2`}
           >
             <span className="text-xl">←</span>
@@ -621,7 +609,7 @@ export default function TaskPage() {
                     >
                       {completedTasks.some((t) => t.taskName === task.name)
                         ? "Completed ✓"
-                        : "Start Task"}
+                        : "View Task"}
                     </motion.button>
                   </div>
                 </motion.div>
@@ -669,32 +657,63 @@ export default function TaskPage() {
                     </div>
 
                     <div className="flex gap-3">
-                      <motion.button
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
-                        onClick={() =>
-                          setFlippedCards(
-                            flippedCards.filter((i) => i !== index)
-                          )
-                        }
-                        className="flex-1 bg-white text-gray-800 py-2 rounded-lg font-medium shadow"
-                      >
-                        Back
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
-                        onClick={() => handleComplete(index)}
-                        className={`flex-1 py-2 rounded-lg font-bold shadow-md ${
-                          ["bg-blue-500", "bg-purple-500", "bg-amber-500"][
-                            index % 3
-                          ]
-                        } text-white`}
-                      >
-                        Done ✓
-                      </motion.button>
+                        {startedTasks.includes(index) ? (
+                          <>
+                            <motion.button
+                              whileHover={{ scale: 1.03 }}
+                              whileTap={{ scale: 0.97 }}
+                              onClick={() =>
+                                setFlippedCards(
+                                  flippedCards.filter((i) => i !== index)
+                                )
+                              }
+                              className="flex-1 p-2 bg-white text-gray-800 py-2 rounded-lg font-medium shadow"
+                            >
+                              Back
+                            </motion.button>
+                            <motion.button
+                              whileHover={{ scale: 1.03 }}
+                              whileTap={{ scale: 0.97 }}
+                              onClick={() => handleComplete(index)}
+                              className={`flex-1 p-2 rounded-lg font-bold shadow-md ${
+                                [
+                                  "bg-blue-500",
+                                  "bg-purple-500",
+                                  "bg-amber-500",
+                                ][index % 3]
+                              } text-white`}
+                            >
+                              Done ✓
+                            </motion.button>
+                          </>
+                        ) : (
+                          <>
+                          <motion.button
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                            onClick={() =>
+                              setStartedTasks([...startedTasks, index])
+                            }
+                            className="flex-1 p-2 rounded-lg font-bold shadow-md bg-green-500 text-white"
+                          >
+                            Start Task ▶
+                          </motion.button>
+                          <motion.button
+                              whileHover={{ scale: 1.03 }}
+                              whileTap={{ scale: 0.97 }}
+                              onClick={() =>
+                                setFlippedCards(
+                                  flippedCards.filter((i) => i !== index)
+                                )
+                              }
+                              className="flex-1 p-2 bg-white text-gray-800 py-2 rounded-lg font-medium shadow"
+                            >
+                              Back
+                            </motion.button>
+                        </>
+                        )}
+                      </div>
                     </div>
-                  </div>
                 </motion.div>
               </motion.div>
 

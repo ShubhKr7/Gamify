@@ -6,11 +6,15 @@ import { SurveyProvider, useSurvey } from "./contexts/SurveyContext";
 import TaskPage from "./pages/TaskPage";
 import SurveyPage from "./pages/SurveyPage";
 import { motion, AnimatePresence } from "framer-motion";
+import ProtectedRoute from "./ProtectedRoutes";
 import ResponsesPage from "./pages/ResponsesPage";
 import { useNavigate } from "react-router-dom";
 import MyProgressPage from "./pages/MyProgressPage";
+import LoginPage from "./pages/LoginPage";
 import AdminTaskPage from "./pages/AdminTaskPage";
 import CreateTaskPage from "./pages/CreateTaskPage";
+import { FaSignOutAlt } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 function Dashboard() {
   const { points } = usePoints();
@@ -144,7 +148,7 @@ function Dashboard() {
       {/* Main Content */}
       <div className="relative z-10">
         {/* Gamified Navigation Bar */}
-        <nav className="bg-white/90 backdrop-blur-md shadow-lg rounded-2xl p-4 mb-8 md:mb-12 border-2 border-purple-100/50">
+        <nav className="relative bg-white/90 backdrop-blur-md shadow-lg rounded-2xl p-4 mb-8 md:mb-12 border-2 border-purple-100/50">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-3">
               <h1 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
@@ -172,8 +176,19 @@ function Dashboard() {
 
               <div className="flex items-center gap-2 bg-blue-500/10 border-2 border-blue-500/30 text-blue-700 px-4 py-2 rounded-full font-bold shadow-md">
                 <span className="text-lg">✨</span>
-                <span>XP: {points}</span>
+                <span>XPS: {points}</span>
               </div>
+              {/* Absolute Sign Out Button */}
+              <button
+                onClick={() => {
+                  Cookies.remove("id");
+                  window.location.href = "/login";
+                }}
+                className="flex top-4 right-4 w-12 h-12 rounded-full bg-red-500 hover:bg-red-600 text-white text-xl font-bold shadow-lg flex items-center justify-center transition-all duration-300 z-50"
+                title="Sign Out"
+              >
+                <FaSignOutAlt />
+              </button>
             </div>
           </div>
         </nav>
@@ -192,7 +207,11 @@ function Dashboard() {
                 document
                   .getElementById(`card-${id}`)
                   ?.classList.add("animate-pulse");
-                setTimeout(() => navigate(`/task/${id}`), 300);
+                setTimeout(() => {
+                  Cookies.get("id") === "admin"
+                    ? navigate(`/admin/${id}`)
+                    : navigate(`/task/${id}`);
+                }, 300);
               }}
               className="cursor-pointer"
             >
@@ -267,13 +286,16 @@ function Root() {
       <SurveyProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/task/:id" element={<TaskPage />} />
-            <Route path="/survey/:id" element={<SurveyPage />} />
-            <Route path="/responses" element={<ResponsesPage />} />
-            <Route path="/my-progress" element={<MyProgressPage />} />
-            <Route path="/admin/:id" element={<AdminTaskPage />} />
-            <Route path="/task/:id/create" element={<CreateTaskPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/task/:id" element={<TaskPage />} />
+              <Route path="/survey/:id" element={<SurveyPage />} />
+              <Route path="/responses" element={<ResponsesPage />} />
+              <Route path="/my-progress" element={<MyProgressPage />} />
+              <Route path="/admin/:id" element={<AdminTaskPage />} />
+              <Route path="/task/:id/create" element={<CreateTaskPage />} />
+            </Route>
           </Routes>
         </Router>
       </SurveyProvider>
