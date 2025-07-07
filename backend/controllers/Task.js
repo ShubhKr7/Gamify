@@ -1,5 +1,42 @@
 import Task from "../models/Task.js";
 import Category from "../models/Category.js";
+
+const startTask = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const task = await Task.findByIdAndUpdate(
+      id,
+      { $inc: { inProgressCount: 1 } },
+      { new: true }
+    );
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    res.status(200).json(task);
+  } catch (error) {
+    console.error("Error starting task:", error);
+    res.status(500).json({ message: "Failed to start task", error });
+  }
+};
+
+const completeTask = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    const task = await Task.findByIdAndUpdate(
+      taskId,
+      { $inc: { completedCount: 1 } },
+      { new: true }
+    );
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    res.status(200).json(task);
+  } catch (error) {
+    console.error("Error completing task:", error);
+    res.status(500).json({ message: "Failed to complete task", error });
+  }
+};
+
 const getAllTasks = async (req, res) => {
   try {
     const { id } = req.params;
@@ -16,7 +53,13 @@ async function createTask(req, res) {
     const { name, description, details, category, difficulty } = req.body;
 
     // Step 1: Create the new task
-    const task = await Task.create({ name, description, details, category,difficulty });
+    const task = await Task.create({
+      name,
+      description,
+      details,
+      category,
+      difficulty,
+    });
 
     // Step 2: Push the task reference into the Category model
     await Category.findByIdAndUpdate(
@@ -47,22 +90,28 @@ async function deleteTask(req, res) {
 }
 
 async function editTask(req, res) {
+  const { id } = req.params;
+  const { details, difficulty } = req.body;
+
   try {
-    const { id } = req.params;
-    const { name, description, details, category,difficulty } = req.body;
     const task = await Task.findByIdAndUpdate(
       id,
-      { name, description, details, category,difficulty },
+      { details, difficulty },
       { new: true }
     );
-    if (!task) {
-      return res.status(404).json({ message: "Task not found" });
-    }
-    res.status(200).json(task);
-  } catch (error) {
-    console.error("Error editing task:", error);
-    res.status(500).json({ message: "Failed to edit task", error });
+    if (!task) return res.status(404).json({ error: "Task not found" });
+
+    res.json(task);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
   }
 }
 
-export { getAllTasks, createTask, deleteTask, editTask };
+export {
+  getAllTasks,
+  createTask,
+  deleteTask,
+  editTask,
+  startTask,
+  completeTask,
+};

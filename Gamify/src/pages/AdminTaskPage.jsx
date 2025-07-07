@@ -263,13 +263,9 @@ export default function TaskPage() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [editableTasks, setEditableTasks] = useState(() => {
-    return category?.tasks?.map((task) => task.details) || [];
-  });
+  const [editableTasks, setEditableTasks] = useState([]);
 
-  const [editableDifficulties, setEditableDifficulties] = useState(
-    () => category?.tasks?.map((task) => task.difficulty) || []
-  );
+  const [editableDifficulties, setEditableDifficulties] = useState([]);
 
   const [flippedCards, setFlippedCards] = useState([]);
   const [colorScheme, setColorScheme] = useState(
@@ -291,6 +287,8 @@ export default function TaskPage() {
         console.log("Tasks fetched successfully:", res);
         setTasks(res.data.tasks);
         setCategory(res.data);
+        setEditableTasks(res.data.tasks.map((task) => task.details));
+        setEditableDifficulties(res.data.tasks.map((task) => task.difficulty));
         setLoading(false);
       })
       .catch((err) => {
@@ -309,9 +307,52 @@ export default function TaskPage() {
     }
   };
 
-  const handleDoneEdit = (index) => {
-    category.tasks[index].details = editableTasks[index];
-    // You could optionally store editableDifficulties[index] in category.tasks[index].difficulty
+  const handleDoneEdit = async (index) => {
+    const updatedTask = {
+      details: editableTasks[index],
+      difficulty: editableDifficulties[index],
+    };
+
+    const taskId = category.tasks[index]._id;
+
+    try {
+      const res = await axios.put(
+        `http://localhost:3001/api/task/update/${taskId}`,
+        updatedTask,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        // ✅ Update local category state
+        const newCategory = { ...category };
+        newCategory.tasks[index].details = updatedTask.details;
+        newCategory.tasks[index].difficulty = updatedTask.difficulty;
+        setCategory(newCategory);
+
+        setFlippedCards((prev) => prev.filter((i) => i !== index));
+      } else {
+        console.error("Failed to update task");
+      }
+    } catch (error) {
+      console.error("Error updating task:", error.message);
+    }
+  };
+
+  const handleCancelEdit = (index) => {
+    // Restore original values from category.tasks
+    const originalTaskDetails = category.tasks[index].details;
+    const originalDifficulty = category.tasks[index].difficulty;
+
+    setEditableTasks((prev) =>
+      prev.map((task, i) => (i === index ? originalTaskDetails : task))
+    );
+
+    setEditableDifficulties((prev) =>
+      prev.map((diff, i) => (i === index ? originalDifficulty : diff))
+    );
+
     setFlippedCards((prev) => prev.filter((i) => i !== index));
   };
 
@@ -485,7 +526,7 @@ export default function TaskPage() {
                     >
                       {/* Editable difficulty tag */}
                       <div className="absolute -top-3 -right-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10">
-                        {task.difficulty}
+                        {editableDifficulties[index]}
                       </div>
 
                       {/* Difficulty indicator */}
@@ -595,7 +636,7 @@ export default function TaskPage() {
 
                         <textarea
                           className="w-full flex-grow rounded-lg p-3 text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none mb-4"
-                          value={task.details}
+                          value={editableTasks[index]}
                           onChange={(e) => {
                             const updated = [...editableTasks];
                             updated[index] = e.target.value;
@@ -607,11 +648,7 @@ export default function TaskPage() {
                           <motion.button
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
-                            onClick={() =>
-                              setFlippedCards(
-                                flippedCards.filter((i) => i !== index)
-                              )
-                            }
+                            onClick={() => handleCancelEdit(index)}
                             className="flex-1 bg-white text-gray-800 py-2 rounded-lg font-medium shadow"
                           >
                             Cancel

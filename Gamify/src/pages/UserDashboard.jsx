@@ -1,7 +1,7 @@
 import { usePoints } from "../contexts/PointsContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { FaSignOutAlt } from "react-icons/fa";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -10,85 +10,6 @@ export default function Dashboard() {
   const { points } = usePoints();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
-
-  // const tasks = {
-  //   1: {
-  //     name: "Chores",
-  //     emoji: "🧹",
-  //     color: "#F4A261", // warm orange
-  //     tasks: ["Make your bed", "Put away your toys", "Help set the table"],
-  //   },
-  //   2: {
-  //     name: "Homework Time",
-  //     emoji: "📚",
-  //     color: "#2A9D8F", // teal green
-  //     tasks: [
-  //       "Finish your math homework",
-  //       "Practice reading for 15 minutes",
-  //       "Write 3 English sentences",
-  //     ],
-  //   },
-  //   3: {
-  //     name: "Physical Activity",
-  //     emoji: "🏃",
-  //     color: "#E76F51", // coral red
-  //     tasks: [
-  //       "Run around the house or garden 3 times",
-  //       "Do 10 jumping jacks",
-  //       "Dance to your favorite song",
-  //     ],
-  //   },
-  //   4: {
-  //     name: "Creative Corner",
-  //     emoji: "🎨",
-  //     color: "#E9C46A", // yellow ochre
-  //     tasks: [
-  //       "Draw a picture of your family",
-  //       "Paint using your fingers",
-  //       "Build something with blocks or Legos",
-  //     ],
-  //   },
-  //   5: {
-  //     name: "Mindful Moments",
-  //     emoji: "🌈",
-  //     color: "#9C89B8", // soft purple
-  //     tasks: [
-  //       "Take 5 deep breaths with your eyes closed",
-  //       "Say 3 things that made you happy today",
-  //       "Sit quietly and listen to sounds around you",
-  //     ],
-  //   },
-  //   6: {
-  //     name: "Helping Hands",
-  //     emoji: "🤝",
-  //     color: "#F3722C", // orange-red
-  //     tasks: [
-  //       "Help mom or dad with laundry",
-  //       "Water the plants",
-  //       "Feed your pet (if you have one)",
-  //     ],
-  //   },
-  //   7: {
-  //     name: "Fun & Games",
-  //     emoji: "🎲",
-  //     color: "#577590", // navy blue
-  //     tasks: [
-  //       "Play a board game with family",
-  //       "Solve a jigsaw puzzle",
-  //       "Build a fort with pillows and blankets",
-  //     ],
-  //   },
-  //   8: {
-  //     name: "Good Habits",
-  //     emoji: "🦷",
-  //     color: "#43AA8B", // mint green
-  //     tasks: [
-  //       "Brush your teeth in the morning and night",
-  //       "Wash your hands before meals",
-  //       "Pack your school bag for tomorrow",
-  //     ],
-  //   },
-  // };
 
   useEffect(() => {
     const id = Cookies.get("id");
@@ -208,18 +129,18 @@ export default function Dashboard() {
               whileTap={{ scale: 0.95 }}
               onClick={() => {
                 document
-                  .getElementById(`card-${id}`)
+                  .getElementById(`card-${category._id}`)
                   ?.classList.add("animate-pulse");
                 setTimeout(() => {
                   Cookies.get("id") === "admin"
-                    ? navigate(`/admin/${id}`)
-                    : navigate(`/task/${id}`);
+                    ? navigate(`/admin/task/${category._id}`)
+                    : navigate(`/task/${category._id}`);
                 }, 300);
               }}
               className="cursor-pointer"
             >
               <div
-                id={`card-${id}`}
+                id={`card-${category._id}`}
                 className="h-full bg-white/90 backdrop-blur-sm shadow-md rounded-2xl p-6 hover:shadow-xl transition-all border-t-8 flex flex-col"
                 style={{ borderColor: category.color || "#ccc" }}
               >

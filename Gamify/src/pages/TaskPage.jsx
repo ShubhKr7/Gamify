@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import Cookies from "js-cookie";
 
 const categoryColors = {
   1: {
@@ -47,221 +46,16 @@ const categoryColors = {
   },
 };
 
-const tasks = {
-  1: {
-    name: "Chores",
-    emoji: "🧹",
-    tasks: [
-      {
-        name: "Make your bed",
-        description: "Start your day by tidying your sleeping space",
-        details:
-          "Making your bed helps you start the day with a win. It keeps your room clean and builds discipline. Plus, it feels nice to return to a tidy bed at night!",
-      },
-      {
-        name: "Put away your toys",
-        description: "Keep your play area neat and organized",
-        details:
-          "Tidying up your toys keeps your space safe and clean. It also helps you find them more easily next time. Taking care of your things shows responsibility!",
-      },
-      {
-        name: "Help set the table",
-        description: "Contribute to family meal preparation",
-        details:
-          "Setting the table is a great way to help your family. You learn where items go and get ready for mealtime. It's a fun way to join in and feel helpful.",
-      },
-    ],
-  },
-  2: {
-    name: "Homework Time",
-    emoji: "📚",
-    tasks: [
-      {
-        name: "Finish your math homework",
-        description: "Practice your numbers and problems",
-        details:
-          "Math helps your brain grow stronger! Completing your homework builds confidence and prepares you for class. Remember to check your work when you're done.",
-      },
-      {
-        name: "Practice reading for 15 minutes",
-        description: "Improve your reading skills daily",
-        details:
-          "Reading opens doors to amazing adventures! Regular practice helps you read faster and understand more. Find a cozy spot and enjoy your book.",
-      },
-      {
-        name: "Write 3 English sentences",
-        description: "Express your thoughts in writing",
-        details:
-          "Writing helps share your ideas with others. Try writing about your day or make up a fun story. Don't forget capital letters and periods!",
-      },
-    ],
-  },
-  3: {
-    name: "Physical Activity",
-    emoji: "🏃",
-    tasks: [
-      {
-        name: "Run around the house or garden 3 times",
-        description: "Get your heart pumping with this fun exercise",
-        details:
-          "Running gives you energy and makes you stronger! Count your laps and try to beat your record. Feel the wind as you move your body!",
-      },
-      {
-        name: "Run around the house or garden 3 times",
-        description: "Get your heart pumping with this fun exercise",
-        details:
-          "Running gives you energy and makes you stronger! Count your laps and try to beat your record. Feel the wind as you move your body!",
-      },
-      {
-        name: "Run around the house or garden 3 times",
-        description: "Get your heart pumping with this fun exercise",
-        details:
-          "Running gives you energy and makes you stronger! Count your laps and try to beat your record. Feel the wind as you move your body!",
-      },
-      {
-        name: "Do 10 jumping jacks",
-        description: "Great for coordination and energy",
-        details:
-          "Jumping jacks work your whole body. They help with balance and get your blood flowing. Count out loud for extra fun!",
-      },
-      {
-        name: "Dance to your favorite song",
-        description: "Move your body and have fun!",
-        details:
-          "Dancing is exercise that doesn't feel like work! Express yourself through movement. Try new moves or make up your own dance!",
-      },
-    ],
-  },
-  4: {
-    name: "Creative Corner",
-    emoji: "🎨",
-    tasks: [
-      {
-        name: "Draw a picture of your family",
-        description: "Use colors to show your love",
-        details:
-          "Art lets you show how you see the world. Include everyone's special features. This will be a treasure to keep for years!",
-      },
-      {
-        name: "Paint using your fingers",
-        description: "Get messy and creative",
-        details:
-          "Finger painting is sensory fun! Mix colors to make new ones. Enjoy the feeling of paint between your fingers.",
-      },
-      {
-        name: "Build something with blocks or Legos",
-        description: "Construct your imagination",
-        details:
-          "Building toys teach problem-solving. Create something tall, or make a house for your toys. What amazing thing will you invent today?",
-      },
-    ],
-  },
-  5: {
-    name: "Mindful Moments",
-    emoji: "🌈",
-    tasks: [
-      {
-        name: "Take 5 deep breaths with your eyes closed",
-        description: "Calm your mind and body",
-        details:
-          "Breathing slowly helps when you feel upset or excited. In through your nose, out through your mouth. Feel your body relax with each breath.",
-      },
-      {
-        name: "Say 3 things that made you happy today",
-        description: "Focus on positive moments",
-        details:
-          "Noticing good things makes more good feelings! They can be big or small. Sharing them makes the happiness grow.",
-      },
-      {
-        name: "Sit quietly and listen to sounds around you",
-        description: "Practice being present",
-        details:
-          "Close your eyes and name all the sounds you hear. This helps you focus and notice the world. How many different sounds can you identify?",
-      },
-    ],
-  },
-  6: {
-    name: "Helping Hands",
-    emoji: "🤝",
-    tasks: [
-      {
-        name: "Help mom or dad with laundry",
-        description: "Learn responsibility through helping",
-        details:
-          "Matching socks is like a puzzle! Folding teaches neatness. You're learning important life skills while helping your family.",
-      },
-      {
-        name: "Water the plants",
-        description: "Take care of living things",
-        details:
-          "Plants need care just like pets. Notice how they grow with your help. Different plants need different amounts of water - learn their needs!",
-      },
-      {
-        name: "Feed your pet (if you have one)",
-        description: "Show love to your animal friend",
-        details:
-          "Pets depend on us for care. Measure their food carefully. Take time to pet them while they eat - it builds your bond.",
-      },
-    ],
-  },
-  7: {
-    name: "Fun & Games",
-    emoji: "🎲",
-    tasks: [
-      {
-        name: "Play a board game with family",
-        description: "Bond through shared playtime",
-        details:
-          "Games teach taking turns and good sportsmanship. Laugh together and enjoy the competition. Remember it's about fun, not just winning!",
-      },
-      {
-        name: "Solve a jigsaw puzzle",
-        description: "Exercise your problem-solving skills",
-        details:
-          "Puzzles are great for your brain! Start with edge pieces. Notice how shapes fit together - it's satisfying when pieces click!",
-      },
-      {
-        name: "Build a fort with pillows and blankets",
-        description: "Create your own cozy space",
-        details:
-          "Use chairs and furniture to support your structure. Make it just how you like! Enjoy reading or playing in your special hideaway.",
-      },
-    ],
-  },
-  8: {
-    name: "Good Habits",
-    emoji: "🦷",
-    tasks: [
-      {
-        name: "Brush your teeth in the morning and night",
-        description: "Keep your smile healthy and bright",
-        details:
-          "Brush for 2 minutes to reach all surfaces. Don't forget your tongue! Healthy teeth mean fewer dentist visits and confident smiles.",
-      },
-      {
-        name: "Wash your hands before meals",
-        description: "Stay clean and germ-free",
-        details:
-          "Scrub with soap for 20 seconds (sing the ABCs!). Wash between fingers and under nails. Clean hands keep you from getting sick.",
-      },
-      {
-        name: "Pack your school bag for tomorrow",
-        description: "Be prepared for the next day",
-        details:
-          "Check your schedule for needed books and supplies. Put completed homework in its folder. Starting organized makes mornings smoother!",
-      },
-    ],
-  },
-};
-
 export default function TaskPage() {
   const { id: categoryID } = useParams();
   const navigate = useNavigate();
-  const [category, setCategory] = useState(); 
-  const [startedTasks, setStartedTasks] = useState([]);
+  const [category, setCategory] = useState();
+  const [startedTasks, setStartedTasks] = useState({});
+  const [currentlyDoing, setCurrentlyDoing] = useState({});
+  const [completedCounts, setCompletedCounts] = useState({});
   const [completedTasks, setCompletedTasks] = useState(() => {
     try {
-      const saved = localStorage.getItem(`completedTasks-${id}`);
+      const saved = localStorage.getItem(`completedTasks-${categoryID}`);
       const parsed = saved ? JSON.parse(saved) : [];
       return Array.isArray(parsed) ? parsed : [];
     } catch {
@@ -269,27 +63,20 @@ export default function TaskPage() {
     }
   });
 
-  const [userPoints, setUserPoints] = useState(0); // or fetch from localStorage or backend
+  const [loading, setLoading] = useState(true);
+  const [userPoints, setUserPoints] = useState(0);
   const [rewardClaimed, setRewardClaimed] = useState(false);
+  const [tasks, setTasks] = useState([]);
 
   const [celebrate, setCelebrate] = useState(false);
-  const [points, setPoints] = useState(() => {
-    const saved = localStorage.getItem(`points-${id}`);
-    return saved ? JSON.parse(saved) : 0;
-  });
+  const [points, setPoints] = useState(0);
 
   const [colorScheme, setColorScheme] = useState(
     categoryColors[Math.floor(Math.random() * 8) + 1]
   );
 
   const [flippedCards, setFlippedCards] = useState([]);
-  const [stats, setStats] = useState({
-    ongoing: Math.floor(Math.random() * 100) + 20,
-    completed: Math.floor(Math.random() * 500) + 100,
-  });
-
   const [showRewardPopup, setShowRewardPopup] = useState(false);
-  const [pointsAdded, setPointsAdded] = useState(false);
 
   const handleClaimReward = () => {
     // Show the reward popup first
@@ -309,39 +96,37 @@ export default function TaskPage() {
     setRewardClaimed(true);
 
     localStorage.setItem("userPoints", newPoints);
-    localStorage.setItem(`rewardClaimed-${id}`, "true");
+    localStorage.setItem(`rewardClaimed-${categoryID}`, "true");
 
     setTimeout(() => {
       navigate("/dashboard");
     }, 800);
   };
 
-  // Dark pattern: Gradually increase numbers to create social proof illusion **DELETE THIS LATER**
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStats((prev) => ({
-        ongoing: prev.ongoing + Math.floor(Math.random() * 3),
-        completed: prev.completed + Math.floor(Math.random() * 10),
-      }));
-    }, 30000); // Increment every 30 seconds
-    return () => clearInterval(interval);
-  }, []);
-
   //Fetching tasks
   useEffect(() => {
-    const id = Cookies.get("id");
-    if (id === "user") navigate("/dashboard");
     if (!categoryID) return;
     setLoading(true);
-
     axios
       .get(`http://localhost:3001/api/categories/all/tasks/${categoryID}`, {
         withCredentials: true,
       })
       .then((res) => {
-        console.log("Tasks fetched successfully:", res);
+        console.log("Tasks fetched successfully:", res.data);
         setTasks(res.data.tasks);
         setCategory(res.data);
+
+        const startedMap = {};
+        const completedCountMap = {};
+
+        res.data.tasks.forEach((task, index) => {
+          startedMap[index] = task.inProgressCount || 0;
+          completedCountMap[index] = task.completedCount || 0;
+        });
+
+        setCurrentlyDoing(startedMap);
+        setCompletedCounts(completedCountMap);
+
         setLoading(false);
       })
       .catch((err) => {
@@ -352,11 +137,12 @@ export default function TaskPage() {
 
   useEffect(() => {
     const savedPoints = parseInt(localStorage.getItem("userPoints")) || 0;
-    const wasClaimed = localStorage.getItem(`rewardClaimed-${id}`) === "true";
+    const wasClaimed =
+      localStorage.getItem(`rewardClaimed-${categoryID}`) === "true";
 
     setUserPoints(savedPoints);
     setRewardClaimed(wasClaimed);
-  }, [id]);
+  }, [categoryID]);
 
   const handleFlip = (index) => {
     if (!flippedCards.includes(index)) {
@@ -368,52 +154,101 @@ export default function TaskPage() {
     }
   };
 
-  const handleComplete = (index) => {
-    const category = tasks[id];
-    const task = category?.tasks?.[index];
-
+  const handleComplete = async (index) => {
+    const task = tasks?.[index];
     if (!task) return;
 
     const completedTask = {
-      taskName: task.name, // ✅ just store the name (string)
+      taskName: task.name,
       completedAt: new Date().toISOString(),
     };
 
     const previous =
-      JSON.parse(localStorage.getItem(`completedTasks-${id}`)) || [];
+      JSON.parse(localStorage.getItem(`completedTasks-${categoryID}`)) || [];
 
     const alreadyCompleted = previous.some((t) => t.taskName === task.name);
     if (alreadyCompleted) return;
 
-    const updated = [...previous, completedTask];
-    setCompletedTasks(updated);
+    try {
+      // ✅ Backend call to increment completedCount
+      const res = await fetch(
+        `http://localhost:3001/api/task/complete/${task._id}`,
+        {
+          method: "POST",
+        }
+      );
 
-    setPoints((prev) => {
-      const newPoints = prev + 50;
-      localStorage.setItem(`points-${id}`, newPoints);
-      return newPoints;
-    });
+      if (!res.ok) throw new Error("Failed to update task");
+      console.log("Task completed successfully:", res.data);
+      // ✅ Optimistically update UI
+      const updated = [...previous, completedTask];
+      setCompletedTasks(updated);
 
-    localStorage.setItem(`completedTasks-${id}`, JSON.stringify(updated));
+      setPoints((prev) => {
+        const newPoints = prev + 50;
+        localStorage.setItem(`points-${categoryID}`, newPoints);
+        return newPoints;
+      });
 
-    setCelebrate(true);
-    setTimeout(() => setCelebrate(false), 2000);
-    setTimeout(() => navigate(`/survey/${id}`), 800);
+      localStorage.setItem(
+        `completedTasks-${categoryID}`,
+        JSON.stringify(updated)
+      );
+
+      // ✅ Update local UI task count
+      setCompletedCounts((prev) => ({
+        ...prev,
+        [index]: (prev[index] || 0) + 1,
+      }));
+
+      setCelebrate(true);
+      setTimeout(() => setCelebrate(false), 2000);
+      setTimeout(() => navigate(`/survey/${categoryID}`), 800);
+    } catch (error) {
+      console.error("Error completing task:", error.message);
+    }
+  };
+
+  const handleStartTask = async (taskId, index) => {
+    try {
+      // ✅ Call backend to persist the change
+      const res = await fetch(
+        `http://localhost:3001/api/task/start/${taskId}`,
+        {
+          method: "PUT",
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to start task");
+      console.log("Task started successfully:", res.data);
+
+      setStartedTasks((prev) => ({
+        ...prev,
+        [index]: (prev[index] || 0) + 1,
+      }));
+
+      setCurrentlyDoing((prev) => ({
+        ...prev,
+        [index]: (prev[index] || 0) + 1,
+      }));
+    } catch (err) {
+      console.error("Start Task Error:", err);
+    }
   };
 
   // Task difficulties for visual variety
   const difficulties = ["Easy", "Medium", "Hard", "Popular", "Trending"];
 
   const resetProgress = () => {
-    localStorage.removeItem(`completedTasks-${id}`);
-    localStorage.removeItem(`points-${id}`);
-    localStorage.removeItem(`rewardClaimed-${id}`);
+    localStorage.removeItem(`completedTasks-${categoryID}`);
+    localStorage.removeItem(`points-${categoryID}`);
+    localStorage.removeItem(`rewardClaimed-${categoryID}`);
     setCompletedTasks([]);
     setPoints(0);
     setRewardClaimed(false);
   };
 
-  if (!category) {
+  if (tasks.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-6">
         <motion.div
@@ -672,19 +507,19 @@ export default function TaskPage() {
                           Currently Doing
                         </div>
                         <div className="font-bold text-blue-600 animate-countup">
-                          {stats.ongoing + index * 3}
+                          {currentlyDoing[index]}
                         </div>
                       </div>
                       <div className="bg-white/80 rounded-lg p-2 text-center shadow-inner">
                         <div className="text-xs text-gray-500">Completed</div>
                         <div className="font-bold text-green-600 animate-countup">
-                          {stats.completed + index * 15}
+                          {completedCounts[index]}
                         </div>
                       </div>
                     </div>
 
                     <div className="flex gap-3">
-                      {startedTasks.includes(index) ? (
+                      {startedTasks[index] > 0 ? (
                         <>
                           <motion.button
                             whileHover={{ scale: 1.03 }}
@@ -716,9 +551,7 @@ export default function TaskPage() {
                           <motion.button
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
-                            onClick={() =>
-                              setStartedTasks([...startedTasks, index])
-                            }
+                            onClick={() => handleStartTask(task._id, index)}
                             className="flex-1 p-2 rounded-lg font-bold shadow-md bg-green-500 text-white"
                           >
                             Start Task ▶

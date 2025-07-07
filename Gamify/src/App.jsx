@@ -1,14 +1,11 @@
 import "./App.css";
-import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { PointsProvider, usePoints } from "./contexts/PointsContext";
-import { SurveyProvider, useSurvey } from "./contexts/SurveyContext";
+import { PointsProvider } from "./contexts/PointsContext";
+import { SurveyProvider } from "./contexts/SurveyContext";
 import TaskPage from "./pages/TaskPage";
 import SurveyPage from "./pages/SurveyPage";
-import { motion, AnimatePresence } from "framer-motion";
 import ProtectedRoute from "./ProtectedRoutes";
 import ResponsesPage from "./pages/ResponsesPage";
-import { useNavigate } from "react-router-dom";
 import MyProgressPage from "./pages/MyProgressPage";
 import LoginPage from "./pages/LoginPage";
 import AdminTaskPage from "./pages/AdminTaskPage";
@@ -33,7 +30,7 @@ function Root() {
               <Route path="/admin/task/:id" element={<AdminTaskPage />} />
               <Route path="/task/create/:id" element={<CreateTaskPage />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="/coming-soon" element={<ComingSoon />} />
+              <Route path="/coming-soon" element={<ComingSoon />} />  
             </Route>
           </Routes>
         </Router>
