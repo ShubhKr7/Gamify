@@ -64,3 +64,47 @@
   opacity: 0;
   transition: opacity 0.5s;
 }
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  /* Ensure modals don't overflow on small screens */
+  .emoji-picker-react {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* Improve touch targets */
+  button {
+    min-height: 44px;
+  }
+  
+  /* Better spacing for mobile */
+  .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+  
+  /* Ensure text is readable on mobile */
+  input, textarea, select {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+}
+
+/* Ensure emoji picker is responsive */
+.emoji-picker-react {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.emoji-picker-react .emoji-group {
+  padding: 0 !important;
+}
+
+.emoji-picker-react .emoji-group .emoji {
+  font-size: 1.5rem !important;
+}
+
+@media (max-width: 640px) {
+  .emoji-picker-react .emoji-group .emoji {
+    font-size: 1.25rem !important;
+  }
+}

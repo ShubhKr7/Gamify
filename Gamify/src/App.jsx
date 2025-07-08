@@ -16,6 +16,7 @@ import CreateTaskPage from "./pages/CreateTaskPage";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import ComingSoon from "./pages/ComingSoon";
+import NotFound from "./pages/NotFound";
 
 function Root() {
   return (
@@ -24,6 +25,8 @@ function Root() {
         <Router>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/" element={<LoginPage />} />
+
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<UserDashboard />} />
               <Route path="/task/:id" element={<TaskPage />} />
@@ -34,7 +37,14 @@ function Root() {
               <Route path="/task/create/:id" element={<CreateTaskPage />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/coming-soon" element={<ComingSoon />} />
+              
+              {/* Admin routes that should show Coming Soon */}
+              <Route path="/admin" element={<NotFound />} />
+              <Route path="/admin/*" element={<NotFound />} />
             </Route>
+            
+            {/* Catch-all route for 404s */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
       </SurveyProvider>
