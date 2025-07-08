@@ -9,6 +9,8 @@ export default function LoginPage() {
 
     if (role === 'admin') {
       Cookies.set('id', 'admin', { expires: 7 });
+    } else if(role === 'super-admin'){
+      Cookies.set('id', 'super-admin', { expires: 7 });
     } else {
       Cookies.set('id', 'user', { expires: 7 });
     }
@@ -31,6 +33,7 @@ export default function LoginPage() {
         >
           <option value="">-- Choose Role --</option>
           <option value="admin">Admin</option>
+          <option value="super-admin">Super Admin</option>
           <option value="user">User</option>
         </select>
 

@@ -22,15 +22,18 @@ function Root() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route element={<ProtectedRoute />}>
+              {/* User Routes */}
               <Route path="/dashboard" element={<UserDashboard />} />
               <Route path="/task/:id" element={<TaskPage />} />
               <Route path="/survey/:id" element={<SurveyPage />} />
               <Route path="/responses" element={<ResponsesPage />} />
               <Route path="/my-progress" element={<MyProgressPage />} />
-              <Route path="/admin/task/:id" element={<AdminTaskPage />} />
               <Route path="/task/create/:id" element={<CreateTaskPage />} />
+
+              {/* Admin Routes */}
+              <Route path="/admin/task/:id" element={<AdminTaskPage />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="/coming-soon" element={<ComingSoon />} />  
+              <Route path="/coming-soon" element={<ComingSoon />} />
             </Route>
           </Routes>
         </Router>
