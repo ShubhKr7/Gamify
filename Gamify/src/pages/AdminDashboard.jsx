@@ -79,7 +79,7 @@ export default function Dashboard() {
       .then((res) => {
         setCategories((prev) => [...prev, res.data]);
         setNewCategoryName("");
-        setSelectedEmoji("");
+        setSelectedEmoji("🎯");
         setSelectedColor("#8884d8");
         setShowAddModal(false);
       })
@@ -218,7 +218,7 @@ export default function Dashboard() {
   // };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 pt-2 p-2 sm:p-4 md:p-8">
       {/* Animated Background Elements */}
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden z-0">
         {[...Array(15)].map((_, i) => (
@@ -238,46 +238,33 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {loading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="relative bg-white/90 backdrop-blur-md shadow-lg rounded-2xl p-6">
-            <div className="absolute top-0 right-0 w-12 h-12 rounded-full bg-purple-500/20 blur-md"></div>
-            <div className="absolute bottom-0 left-0 w-16 h-16 rounded-full bg-pink-500/20 blur-md"></div>
-            <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Loading Categories...
-            </h2>
-            <div className="w-16 h-16 border-4 border-purple-300 border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        </div>
-      )}
-
       {/* Main Content */}
       <div className="relative z-10">
         {/* Gamified Navigation Bar */}
-        <nav className="relative bg-white/90 backdrop-blur-md shadow-lg rounded-2xl p-4 mb-8 md:mb-12 border-2 border-purple-100/50">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+        <nav className="relative bg-white/90 backdrop-blur-md shadow-lg rounded-2xl p-2 sm:p-4 mb-4 sm:mb-8 md:mb-12 border-2 border-purple-100/50 mt-0">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
                 Quest Dashboard
               </h1>
-              <span className="text-xl">🎯</span>
+              <span className="text-lg sm:text-xl">🎯</span>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
               <button
                 onClick={() => setShowAddModal(true)}
-                className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-teal-500 text-white px-4 py-2 rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all"
+                className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-teal-500 text-white px-3 sm:px-4 py-2 rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all text-sm sm:text-base"
               >
                 <span>Add Category</span>
-                <span className="text-lg">📊</span>
+                <span className="text-base sm:text-lg">📊</span>
               </button>
 
               <button
                 onClick={() => navigate("/coming-soon")}
-                className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all"
+                className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 sm:px-4 py-2 rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all text-sm sm:text-base"
               >
                 <span>View users</span>
-                <span className="text-lg">🏆</span>
+                <span className="text-base sm:text-lg">🏆</span>
               </button>
               {/* Absolute Sign Out Button */}
               <button
@@ -285,7 +272,7 @@ export default function Dashboard() {
                   Cookies.remove("id");
                   window.location.href = "/login";
                 }}
-                className="flex top-4 right-4 w-12 h-12 rounded-full bg-red-500 hover:bg-red-600 text-white text-xl font-bold shadow-lg flex items-center justify-center transition-all duration-300 z-50"
+                className="flex top-4 right-4 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-500 hover:bg-red-600 text-white text-lg sm:text-xl font-bold shadow-lg flex items-center justify-center transition-all duration-300 z-50"
                 title="Sign Out"
               >
                 <FaSignOutAlt />
@@ -295,7 +282,7 @@ export default function Dashboard() {
         </nav>
 
         {showAddModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
             {/* Backdrop with subtle animation */}
             <div
               className="fixed inset-0 bg-gradient-to-br from-purple-500/30 to-pink-500/30 backdrop-blur-sm"
@@ -303,75 +290,94 @@ export default function Dashboard() {
             />
 
             {/* Modal container with pop-in animation */}
-            <div className="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 shadow-2xl w-full max-w-md animate-pop-in">
+            <div className="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl p-4 sm:p-6 shadow-2xl w-full max-w-md mx-4 animate-pop-in overflow-y-auto max-h-[90vh] sm:max-h-[85vh]">
               {/* Decorative elements */}
-              <div className="absolute -top-3 -right-3 w-12 h-12 bg-yellow-400 rounded-full opacity-20 blur-md"></div>
-              <div className="absolute -bottom-3 -left-3 w-16 h-16 bg-purple-400 rounded-full opacity-20 blur-md"></div>
+              <div className="absolute -top-3 -right-3 w-8 h-8 sm:w-12 sm:h-12 bg-yellow-400 rounded-full opacity-20 blur-md"></div>
+              <div className="absolute -bottom-3 -left-3 w-12 h-12 sm:w-16 sm:h-16 bg-purple-400 rounded-full opacity-20 blur-md"></div>
 
               {/* Header */}
-              <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <h2 className="text-xl sm:text-2xl font-bold text-center mb-4 sm:mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 Create New Category
               </h2>
 
               {/* Input Fields */}
               <div className="space-y-4">
                 {/* Name */}
-                <input
-                  type="text"
-                  placeholder="Category name"
-                  value={newCategoryName}
-                  onChange={(e) => setNewCategoryName(e.target.value)}
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
-                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Category Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter category name"
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
+                  />
+                </div>
 
                 {/* Emoji Picker */}
                 <div>
-                  <label className="block font-semibold mb-1 text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Choose an emoji
                   </label>
-                  <EmojiPicker
-                    onEmojiClick={(emojiData) =>
-                      setSelectedEmoji(emojiData.emoji)
-                    }
-                    lazyLoadEmojis
-                    skinTonesDisabled
-                    height={300}
-                  />
-                  <p className="mt-2 text-lg">
+                  <div className="border rounded-xl p-2 bg-gray-50 overflow-hidden">
+                    <EmojiPicker
+                      onEmojiClick={(emojiData) =>
+                        setSelectedEmoji(emojiData.emoji)
+                      }
+                      lazyLoadEmojis
+                      skinTonesDisabled
+                      height={window.innerWidth < 640 ? 250 : 300}
+                      width="100%"
+                      previewConfig={{ showPreview: false }}
+                      searchDisabled={window.innerWidth < 640}
+                    />
+                  </div>
+                  <p className="mt-2 text-sm sm:text-base">
                     Selected: {selectedEmoji || "None"}
                   </p>
                 </div>
 
                 {/* Color Picker */}
                 <div>
-                  <label className="block font-semibold mb-1 text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Pick a color
                   </label>
-                  <input
-                    type="color"
-                    value={selectedColor}
-                    onChange={(e) => setSelectedColor(e.target.value)}
-                    className="w-full h-12 rounded-xl cursor-pointer border border-gray-300"
-                  />
-                  <p className="text-sm mt-1">
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="color"
+                      value={selectedColor}
+                      onChange={(e) => setSelectedColor(e.target.value)}
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg cursor-pointer border border-gray-300"
+                    />
+                    <input
+                      type="text"
+                      value={selectedColor}
+                      onChange={(e) => setSelectedColor(e.target.value)}
+                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      placeholder="#8884d8"
+                    />
+                  </div>
+                  <p className="text-xs sm:text-sm mt-1 text-gray-600">
                     Selected color: {selectedColor}
                   </p>
                 </div>
               </div>
 
               {/* Buttons */}
-              <div className="flex justify-between space-x-4 mt-6">
+              <div className="flex flex-col sm:flex-row gap-3 mt-6">
                 <button
                   onClick={() => {
                     handleAddCategory();
                   }}
-                  className="flex-1 bg-green-500 text-white font-semibold px-6 py-3 rounded-xl hover:bg-green-600 transition-all"
+                  className="flex-1 bg-green-500 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:bg-green-600 transition-all text-sm sm:text-base"
                 >
                   🎉 Create
                 </button>
                 <button
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 bg-white border-2 border-gray-200 text-gray-600 font-semibold px-6 py-3 rounded-xl hover:border-purple-300"
+                  className="flex-1 bg-white border-2 border-gray-200 text-gray-600 font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:border-purple-300 text-sm sm:text-base"
                 >
                   Cancel
                 </button>
@@ -381,7 +387,7 @@ export default function Dashboard() {
         )}
 
         {/* Animated Category Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
           {categories.map((category, index) => (
             <motion.div
               key={category._id}
@@ -404,20 +410,20 @@ export default function Dashboard() {
             >
               <div
                 id={`card-${category._id}`}
-                className="h-full bg-white/90 backdrop-blur-sm shadow-md rounded-2xl p-6 hover:shadow-xl transition-all border-t-8 flex flex-col"
+                className="h-full bg-white/90 backdrop-blur-sm shadow-md rounded-2xl p-3 sm:p-6 hover:shadow-xl transition-all border-t-8 flex flex-col text-base sm:text-lg"
                 style={{ borderColor: category.color || "#ccc" }}
               >
                 <div className="flex-1">
                   <div
-                    className="text-4xl mb-3 text-center"
+                    className="text-2xl sm:text-4xl mb-2 sm:mb-3 text-center"
                     style={{ color: category.color || "#333" }}
                   >
                     {category.emoji}
                   </div>
-                  <h3 className="text-xl font-bold text-center text-gray-800 mb-2">
+                  <h3 className="text-lg sm:text-xl font-bold text-center text-gray-800 mb-2">
                     {category.name}
                   </h3>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-4">
+                  <div className="w-full bg-gray-200 rounded-full h-2 mt-3 sm:mt-4">
                     <div
                       className="h-2 rounded-full transition-all duration-500"
                       style={{
@@ -432,7 +438,7 @@ export default function Dashboard() {
                 </div>
 
                 <button
-                  className="mt-4 w-full py-2 rounded-lg text-sm font-semibold transition-all hover:scale-105"
+                  className="mt-3 sm:mt-4 w-full py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all hover:scale-105"
                   style={{
                     backgroundColor: `${category.color || "#ccc"}20`,
                     color: category.color || "#333",
@@ -441,7 +447,7 @@ export default function Dashboard() {
                   View Tasks →
                 </button>
                 {Cookies.get("id") === "admin" && (
-                  <div className="flex justify-end gap-3 mt-3">
+                  <div className="flex justify-end gap-2 sm:gap-3 mt-3">
                     {/* Edit Button */}
                     <motion.button
                       whileHover={{ scale: 1.1 }}
@@ -456,14 +462,14 @@ export default function Dashboard() {
                           color: category.color || "#8884d8",
                         });
                       }}
-                      className="p-2 rounded-full transition-all flex items-center justify-center hover:bg-opacity-30"
+                      className="p-1.5 sm:p-2 rounded-full transition-all flex items-center justify-center hover:bg-opacity-30"
                       style={{
                         backgroundColor: `${category.color || "#4CAF50"}20`,
                         color: category.color || "#4CAF50",
                       }}
                       title="Edit"
                     >
-                      <FaEdit className="text-lg" />
+                      <FaEdit className="text-sm sm:text-lg" />
                     </motion.button>
 
                     {/* Delete Confirmation Modal */}
@@ -473,22 +479,22 @@ export default function Dashboard() {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
-                          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+                          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
                         >
                           <motion.div
                             initial={{ scale: 0.9, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
-                            className="bg-white rounded-xl p-6 w-full max-w-md mx-auto shadow-xl"
+                            className="bg-white rounded-xl p-4 sm:p-6 w-full max-w-md mx-4 shadow-xl"
                             onClick={(e) => e.stopPropagation()}
                           >
                             <div className="flex flex-col items-center text-center">
-                              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                                <FaTrash className="text-2xl text-red-500" />
+                              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-red-100 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+                                <FaTrash className="text-xl sm:text-2xl text-red-500" />
                               </div>
-                              <h3 className="text-xl font-bold text-gray-800 mb-2">
+                              <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
                                 Delete Category
                               </h3>
-                              <p className="text-gray-600 mb-6">
+                              <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
                                 Delete{" "}
                                 <span className="font-semibold">
                                   "{deleteModal.categoryName}"
@@ -496,7 +502,7 @@ export default function Dashboard() {
                                 ? This cannot be undone.
                               </p>
 
-                              <div className="flex gap-3 w-full">
+                              <div className="flex flex-col sm:flex-row gap-3 w-full">
                                 <button
                                   onClick={() =>
                                     setDeleteModal({
@@ -505,7 +511,7 @@ export default function Dashboard() {
                                       categoryName: "",
                                     })
                                   }
-                                  className="flex-1 py-2 px-4 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+                                  className="flex-1 py-2 px-4 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors text-sm sm:text-base"
                                 >
                                   Cancel
                                 </button>
@@ -515,7 +521,7 @@ export default function Dashboard() {
                                       deleteModal.categoryId
                                     );
                                   }}
-                                  className="flex-1 py-2 px-4 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
+                                  className="flex-1 py-2 px-4 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
                                 >
                                   <FaTrash />
                                   Delete
@@ -538,13 +544,13 @@ export default function Dashboard() {
                           categoryName: category.name,
                         });
                       }}
-                      className="p-2 rounded-full transition-all flex items-center justify-center hover:bg-red-50"
+                      className="p-1.5 sm:p-2 rounded-full transition-all flex items-center justify-center hover:bg-red-50"
                       style={{
                         color: "#f44336",
                       }}
                       title="Delete"
                     >
-                      <FaTrash className="text-lg" />
+                      <FaTrash className="text-sm sm:text-lg" />
                     </motion.button>
                   </div>
                 )}
@@ -561,20 +567,19 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
           >
             <motion.div
               initial={{ scale: 0.95, y: 10 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 10 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-2xl p-6 w-full max-w-md mx-auto shadow-2xl overflow-y-auto"
-              style={{ maxHeight: "90vh" }}
+              className="bg-white rounded-2xl p-4 sm:p-6 w-full max-w-xs sm:max-w-md mx-2 sm:mx-4 shadow-2xl overflow-y-auto overflow-x-hidden max-h-[90vh] pt-2 flex flex-col min-w-0"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="flex items-center justify-between mb-6 sticky top-0 bg-white py-2">
-                <h3 className="text-xl md:text-2xl font-bold text-gray-800">
+              <div className="flex items-center justify-between mb-4 sm:mb-6 bg-white py-2 min-w-0 break-words">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 min-w-0 break-words">
                   Edit Category
                 </h3>
                 <button
@@ -594,20 +599,19 @@ export default function Dashboard() {
               </div>
 
               {/* Content Container */}
-              <div className="space-y-6">
+              <div className="space-y-6 min-w-0 flex flex-col">
                 {/* Emoji Picker Section */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                <div className="flex flex-col min-w-0 mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Emoji
                   </label>
-                  <div className="flex flex-col items-center gap-4">
+                  <div className="flex flex-col items-center gap-3 sm:gap-4 min-w-0">
                     {/* Selected Emoji Display */}
-                    <div className="w-16 h-16 flex items-center justify-center text-4xl bg-white rounded-full border-2 border-gray-200 shadow-sm">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center text-2xl sm:text-4xl bg-white rounded-full border-2 border-gray-200 shadow-sm mb-2">
                       {editModal.emoji || "🎯"}
                     </div>
-
                     {/* Emoji Picker */}
-                    <div className="w-full border rounded-xl p-2 bg-gray-50">
+                    <div className="w-full min-w-0 max-w-full border rounded-xl p-2 bg-gray-50 mb-4">
                       <EmojiPicker
                         onEmojiClick={(emojiData) =>
                           setEditModal((p) => ({
@@ -616,7 +620,7 @@ export default function Dashboard() {
                           }))
                         }
                         skinTonesDisabled
-                        height={300}
+                        height={window.innerWidth < 640 ? 220 : 300}
                         lazyLoadEmojis
                         width="100%"
                         previewConfig={{ showPreview: false }}
@@ -676,34 +680,34 @@ export default function Dashboard() {
                     />
                   </div>
                 </div>
-              </div>
 
-              {/* Action Buttons - Sticky Bottom */}
-              <div className="sticky bottom-0 bg-white pt-4 pb-2 mt-6">
-                <div className="flex gap-3">
-                  <button
-                    onClick={() =>
-                      setEditModal({
-                        isOpen: false,
-                        category: null,
-                        name: "",
-                        emoji: "",
-                        color: "",
-                      })
-                    }
-                    className="flex-1 py-2 px-4 text-sm sm:text-base rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleEditCategory(editModal.category._id);
-                    }}
-                    className="flex-1 py-2 px-4 text-sm sm:text-base rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-                  >
-                    <FaSave />
-                    Save
-                  </button>
+                {/* Action Buttons - Sticky Bottom */}
+                <div className="pt-4 pb-2 mt-8">
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                      onClick={() =>
+                        setEditModal({
+                          isOpen: false,
+                          category: null,
+                          name: "",
+                          emoji: "",
+                          color: "",
+                        })
+                      }
+                      className="flex-1 py-2 px-4 text-sm sm:text-base rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleEditCategory(editModal.category._id);
+                      }}
+                      className="flex-1 py-2 px-4 text-sm sm:text-base rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                    >
+                      <FaSave />
+                      Save
+                    </button>
+                  </div>
                 </div>
               </div>
             </motion.div>
